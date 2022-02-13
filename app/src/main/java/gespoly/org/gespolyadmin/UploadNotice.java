@@ -104,13 +104,15 @@ public class UploadNotice extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
         String time = currentTime.format(calForTime.getTime());
 
-        NoticeModel noticeModel = new NoticeModel(binding.noticeTitle.toString(),downloadUrl,date,time,uniqueKey);
+        NoticeModel noticeModel = new NoticeModel(binding.noticeTitle.getText().toString(),downloadUrl,date,time,uniqueKey);
 
         reference.child(uniqueKey).setValue(noticeModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 pd.dismiss();
                 Toast.makeText(UploadNotice.this, "Notice Uploaded", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(UploadNotice.this, MainActivity.class);
+                startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -132,7 +134,7 @@ public class UploadNotice extends AppCompatActivity {
         //here to compressing image OK
         final StorageReference ref;
 //        final String randomKey = UUID.randomUUID().toString();
-        ref = storageReference.child("Notice");
+        ref = storageReference.child("Notice").child("images");
 
         ref.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
