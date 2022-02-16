@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import gespoly.org.gespolyadmin.databinding.ActivityMainBinding;
+import gespoly.org.gespolyadmin.faculty.UpdateFaculty;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         binding.addFaculty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(MainActivity.this, UpdateFaculty.class);
+                startActivity(intent);
             }
         });
 

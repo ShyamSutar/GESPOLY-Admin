@@ -80,7 +80,6 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="14dp"
             android:layout_marginRight="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/uploadNoticeBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

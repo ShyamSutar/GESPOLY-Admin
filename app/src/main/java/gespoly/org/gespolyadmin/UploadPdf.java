@@ -75,6 +75,8 @@ public class UploadPdf extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     private void uploadPdf() {
@@ -113,6 +115,8 @@ public class UploadPdf extends AppCompatActivity {
                 Toast.makeText(UploadPdf.this, "pdf uploaded successfully", Toast.LENGTH_SHORT).show();
                 binding.PdfTitle.setText("");
                 pd.dismiss();
+                Intent intent = new Intent(UploadPdf.this, MainActivity.class);
+                startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

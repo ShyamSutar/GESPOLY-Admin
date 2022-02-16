@@ -8,8 +8,12 @@
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/drawable/circle_purple.xml" value="0.3245" />
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/drawable/circle_red.xml" value="0.3245" />
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/drawable/circle_yellow.xml" value="0.3245" />
+        <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/drawable/ic_add.xml" value="0.301" />
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/drawable/ic_baseline_group_24.xml" value="0.134" />
+        <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/drawable/ic_upload.xml" value="0.301" />
+        <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/layout/activity_add_teacher.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/layout/activity_update_faculty.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/layout/activity_upload_image.xml" value="0.36102564102564105" />
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/layout/activity_upload_notice.xml" value="0.36666666666666664" />
         <entry key="..\:/AndroidStudioProjects/GESPOLYAdmin/app/src/main/res/layout/activity_upload_pdf.xml" value="0.36102564102564105" />
