@@ -1,5 +1,6 @@
 package gespoly.org.gespolyadmin.faculty;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,11 +13,21 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import gespoly.org.gespolyadmin.MainActivity;
+import gespoly.org.gespolyadmin.Model.NoticeModel;
+import gespoly.org.gespolyadmin.Model.TeacherDataModel;
+import gespoly.org.gespolyadmin.UploadNotice;
 import gespoly.org.gespolyadmin.databinding.ActivityAddTeacherBinding;
 
 public class AddTeacher extends AppCompatActivity {
@@ -25,7 +36,7 @@ public class AddTeacher extends AppCompatActivity {
     private String category;
     Uri imageUri;
     ProgressDialog pd;
-    DatabaseReference reference;
+    DatabaseReference reference, dbref;
     StorageReference storageReference;
     private String name, email, post, downloadUrl = "";
 
@@ -37,8 +48,8 @@ public class AddTeacher extends AppCompatActivity {
 
 
         pd = new ProgressDialog(this);
-        reference = FirebaseDatabase.getInstance().getReference().child("gallery");
-        storageReference = FirebaseStorage.getInstance().getReference().child("gallery");
+        reference = FirebaseDatabase.getInstance().getReference().child("teachers");
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         String[] items = new String[]{"Select Category", "Computer Department","Mechanical Department","Electrical Department", "Civil Department"};
         binding.addTeacherCategory.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,items));
@@ -85,8 +96,8 @@ public class AddTeacher extends AppCompatActivity {
         post = binding.teacherPost.getText().toString();
 
         if(name.isEmpty()){
-            binding.teacherEmail.setError("Empty");
-            binding.teacherEmail.requestFocus();
+            binding.teacherName.setError("Empty");
+            binding.teacherName.requestFocus();
         }else if(email.isEmpty()){
             binding.teacherEmail.setError("Empty");
             binding.teacherEmail.requestFocus();
@@ -96,10 +107,69 @@ public class AddTeacher extends AppCompatActivity {
         }else if(category.equals("Select Category")){
             Toast.makeText(this, "Please provide teacher category", Toast.LENGTH_SHORT).show();
         }else if(imageUri == null){
+            Toast.makeText(this, "select Image", Toast.LENGTH_SHORT).show();
             insertData();
         }else{
             insertImage();
         }
+    }
+
+    private void insertImage() {
+        pd.setMessage("Uploading...");
+        pd.show();
+
+        //to compress and upload
+        //here to compressing image OK
+        final StorageReference ref;
+//        final String randomKey = UUID.randomUUID().toString();
+        ref = storageReference.child("Teachers").child("images");
+
+        ref.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(AddTeacher.this, "Cover photo saved", Toast.LENGTH_SHORT).show();
+                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        downloadUrl = String.valueOf(uri);
+                        insertData();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(AddTeacher.this, "Error...", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void insertData() {
+        dbref = reference.child(category);
+        final String uniqueKey = dbref.push().getKey();
+
+
+
+        TeacherDataModel tdModel = new TeacherDataModel(binding.teacherName.getText().toString(),binding.teacherEmail.getText().toString(),binding.teacherPost.getText().toString(),downloadUrl,uniqueKey);
+
+        dbref.child(uniqueKey).setValue(tdModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                pd.dismiss();
+                Toast.makeText(AddTeacher.this, "Notice Uploaded", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AddTeacher.this, MainActivity.class);
+                startActivity(intent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                pd.dismiss();
+                Toast.makeText(AddTeacher.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
