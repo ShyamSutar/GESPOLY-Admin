@@ -36,7 +36,7 @@ public class AddTeacher extends AppCompatActivity {
     private String category;
     Uri imageUri;
     ProgressDialog pd;
-    DatabaseReference reference, dbref;
+    DatabaseReference reference, db;
     StorageReference storageReference;
     private String name, email, post, downloadUrl = "";
 
@@ -122,7 +122,7 @@ public class AddTeacher extends AppCompatActivity {
         //here to compressing image OK
         final StorageReference ref;
 //        final String randomKey = UUID.randomUUID().toString();
-        ref = storageReference.child("Teachers").child("images");
+        ref = storageReference.child("Teachers").child(reference.getKey());
 
         ref.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -147,19 +147,19 @@ public class AddTeacher extends AppCompatActivity {
     }
 
     private void insertData() {
-        dbref = reference.child(category);
-        final String uniqueKey = dbref.push().getKey();
+        db = reference.child(category);
+        final String uniqueKey = db.push().getKey();
 
 
 
         TeacherDataModel tdModel = new TeacherDataModel(binding.teacherName.getText().toString(),binding.teacherEmail.getText().toString(),binding.teacherPost.getText().toString(),downloadUrl,uniqueKey);
 
-        dbref.child(uniqueKey).setValue(tdModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.child(uniqueKey).setValue(tdModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 pd.dismiss();
                 Toast.makeText(AddTeacher.this, "Notice Uploaded", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(AddTeacher.this, MainActivity.class);
+                Intent intent = new Intent(AddTeacher.this, UpdateFaculty.class);
                 startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
