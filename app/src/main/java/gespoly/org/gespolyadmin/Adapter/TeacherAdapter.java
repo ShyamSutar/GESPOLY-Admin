@@ -22,14 +22,14 @@ import gespoly.org.gespolyadmin.R;
 
 public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherViewAdapter> {
 
-    private ArrayList<TeacherDataModel> list;
+    private List<TeacherDataModel> list;
     private Context context;
 
-    public ArrayList<TeacherDataModel> getList() {
+    public List<TeacherDataModel> getList() {
         return list;
     }
 
-    public void setList(ArrayList<TeacherDataModel> list) {
+    public void setList(List<TeacherDataModel> list) {
         this.list = list;
     }
 
@@ -41,7 +41,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
         this.context = context;
     }
 
-    public TeacherAdapter(ArrayList<TeacherDataModel> list, Context context) {
+    public TeacherAdapter(List<TeacherDataModel> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -58,16 +58,15 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
     @Override
     public void onBindViewHolder(@NonNull TeacherViewAdapter holder, int position) {
         TeacherDataModel item = list.get(position);
+
         holder.name.setText(item.getName());
         holder.email.setText(item.getEmail());
         holder.post.setText(item.getPost());
-
         try {
-            Picasso.get().load(item.getImage()).placeholder(R.drawable.profile).into(holder.imageView);
+            Picasso.get().load(item.getImage()).into(holder.imageView);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         holder.update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,8 +93,8 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
             name = itemView.findViewById(R.id.teachername);
             email = itemView.findViewById(R.id.teacheremail);
             post = itemView.findViewById(R.id.teacherpost);
-            update = itemView.findViewById(R.id.teacherUpdateBtn);
             imageView = itemView.findViewById(R.id.teacherImage);
+            update = itemView.findViewById(R.id.teacherUpdateBtn);
 
 
 

@@ -26,7 +26,7 @@ public class UpdateFaculty extends AppCompatActivity {
 
     ActivityUpdateFacultyBinding binding;
 
-    private ArrayList<TeacherDataModel> list1, list2, list3, list4;
+    private List<TeacherDataModel> list1, list2, list3, list4;
     private DatabaseReference reference, db;
 //    private TeacherAdapter adapter;
 
@@ -69,19 +69,19 @@ public class UpdateFaculty extends AppCompatActivity {
                     binding.csNoData.setVisibility(View.GONE);
                     binding.csDepartment.setVisibility(View.VISIBLE);
 
-                    binding.csDepartment.setHasFixedSize(true);
 
-                    TeacherAdapter adapter = new TeacherAdapter(list1,UpdateFaculty.this);
-                    binding.csDepartment.setAdapter(adapter);
-                    binding.csDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
 
                     for (DataSnapshot dataSnapshot: snapshot.getChildren()){
-                            TeacherDataModel data = dataSnapshot.getValue(TeacherDataModel.class);
-                            data.setKey(dataSnapshot.getKey());
-                            list1.add(data);
+                        TeacherDataModel data = dataSnapshot.getValue(TeacherDataModel.class);
+//                        data.setKey(dataSnapshot.getKey());
+                        list1.add(data);
                     }
 
-                    adapter.notifyDataSetChanged();
+                    binding.csDepartment.setHasFixedSize(true);
+                    binding.csDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
+                    TeacherAdapter adapter = new TeacherAdapter(list1,UpdateFaculty.this);
+                    binding.csDepartment.setAdapter(adapter);
+//                  adapter.notifyDataSetChanged();
 
 
                 }
@@ -102,10 +102,7 @@ public class UpdateFaculty extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list2 = new ArrayList<>();
-                if (!snapshot.exists()){
-                    binding.meNoData.setVisibility(View.VISIBLE);
-                    binding.meDepartment.setVisibility(View.GONE);
-                }else{
+
 
                     binding.meNoData.setVisibility(View.GONE);
                     binding.meDepartment.setVisibility(View.VISIBLE);
@@ -123,7 +120,7 @@ public class UpdateFaculty extends AppCompatActivity {
 
                     adapter.notifyDataSetChanged();
 
-                }
+
             }
 
             @Override
@@ -152,15 +149,16 @@ public class UpdateFaculty extends AppCompatActivity {
                     binding.elDepartment.setHasFixedSize(true);
                     binding.elDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
 
-                    TeacherAdapter adapter = new TeacherAdapter(list3, UpdateFaculty.this);
-                    binding.elDepartment.setAdapter(adapter);
+
+                    TeacherAdapter dapter = new TeacherAdapter(list3, UpdateFaculty.this);
+                    binding.elDepartment.setAdapter(dapter);
 
                     for (DataSnapshot snap: snapshot.getChildren()){
                         TeacherDataModel data = snap.getValue(TeacherDataModel.class);
                         list3.add(data);
                     }
 
-                   adapter.notifyDataSetChanged();
+                   dapter.notifyDataSetChanged();
 
                 }
             }
@@ -192,7 +190,7 @@ public class UpdateFaculty extends AppCompatActivity {
                     binding.ceDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
 
                     TeacherAdapter adapter = new TeacherAdapter(list4, UpdateFaculty.this);
-                    binding.csDepartment.setAdapter(adapter);
+                    binding.ceDepartment.setAdapter(adapter);
 
                     for (DataSnapshot snap: snapshot.getChildren()){
                         TeacherDataModel data = snap.getValue(TeacherDataModel.class);

@@ -6,21 +6,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -38,7 +45,9 @@ public class AddTeacher extends AppCompatActivity {
     ProgressDialog pd;
     DatabaseReference reference, db;
     StorageReference storageReference;
-    private String name, email, post, downloadUrl = "";
+    private String name, email, post;
+    private String downloadUrl = "";
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,29 +129,38 @@ public class AddTeacher extends AppCompatActivity {
 
         //to compress and upload
         //here to compressing image OK
-        final StorageReference ref;
-//        final String randomKey = UUID.randomUUID().toString();
-        ref = storageReference.child("Teachers").child(reference.getKey());
 
-        ref.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,baos);
+        byte[] finalimg = baos.toByteArray();
+
+
+        final StorageReference filePath;
+        filePath = storageReference.child("Teachers").child(finalimg+"jpg");
+        final UploadTask uploadTask = filePath.putBytes(finalimg);
+        uploadTask.addOnCompleteListener(AddTeacher.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(AddTeacher.this, "Cover photo saved", Toast.LENGTH_SHORT).show();
-                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        downloadUrl = String.valueOf(uri);
-                        insertData();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    downloadUrl = String.valueOf(uri);
+                                    insertData();
+                                }
+                            });
+                        }
+                    });
+                }else{
                         pd.dismiss();
-                        Toast.makeText(AddTeacher.this, "Error...", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    Toast.makeText(AddTeacher.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
 
     }
 
@@ -179,15 +197,16 @@ public class AddTeacher extends AppCompatActivity {
 
             imageUri = data.getData();
 
-            binding.addTeacherImage.setImageURI(imageUri);
+//            Picasso.get().load(imageUri).into(binding.addTeacherImage);
+//            binding.addTeacherImage.setImageURI(imageUri);
 
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
-//
-//            } catch (IOException e) {
-//                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
-//            }
-//            binding.noticeImageView.setImageBitmap(bitmap);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
+
+            } catch (IOException e) {
+                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+            }
+            binding.addTeacherImage.setImageBitmap(bitmap);
 
         }else{
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
