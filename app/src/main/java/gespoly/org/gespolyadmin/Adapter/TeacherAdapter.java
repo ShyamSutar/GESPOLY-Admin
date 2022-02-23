@@ -1,6 +1,7 @@
 package gespoly.org.gespolyadmin.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import gespoly.org.gespolyadmin.Model.TeacherDataModel;
 import gespoly.org.gespolyadmin.R;
+import gespoly.org.gespolyadmin.UpdateTeacherActivity;
 
 public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherViewAdapter> {
 
@@ -70,7 +72,16 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
         holder.update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Update Teacher", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(context, UpdateTeacherActivity.class);
+                intent.putExtra("name",item.getName());
+                intent.putExtra("email",item.getEmail());
+                intent.putExtra("post",item.getPost());
+                intent.putExtra("image",item.getImage());
+
+                context.startActivity(intent);
+
+
             }
         });
     }

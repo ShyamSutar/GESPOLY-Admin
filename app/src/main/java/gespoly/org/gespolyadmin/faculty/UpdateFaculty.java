@@ -103,6 +103,10 @@ public class UpdateFaculty extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list2 = new ArrayList<>();
 
+                if (!snapshot.exists()){
+                    binding.meNoData.setVisibility(View.VISIBLE);
+                    binding.meDepartment.setVisibility(View.GONE);
+                }else {
 
                     binding.meNoData.setVisibility(View.GONE);
                     binding.meDepartment.setVisibility(View.VISIBLE);
@@ -113,13 +117,13 @@ public class UpdateFaculty extends AppCompatActivity {
                     TeacherAdapter adapter = new TeacherAdapter(list2, UpdateFaculty.this);
                     binding.meDepartment.setAdapter(adapter);
 
-                    for (DataSnapshot snap: snapshot.getChildren()){
+                    for (DataSnapshot snap : snapshot.getChildren()) {
                         TeacherDataModel data = snap.getValue(TeacherDataModel.class);
                         list2.add(data);
                     }
 
                     adapter.notifyDataSetChanged();
-
+                }
 
             }
 
