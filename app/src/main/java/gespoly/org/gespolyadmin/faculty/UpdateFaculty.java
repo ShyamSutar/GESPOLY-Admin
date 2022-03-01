@@ -79,7 +79,7 @@ public class UpdateFaculty extends AppCompatActivity {
 
                     binding.csDepartment.setHasFixedSize(true);
                     binding.csDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
-                    TeacherAdapter adapter = new TeacherAdapter(list1,UpdateFaculty.this);
+                    TeacherAdapter adapter = new TeacherAdapter(list1,UpdateFaculty.this, "Computer Department");
                     binding.csDepartment.setAdapter(adapter);
 //                  adapter.notifyDataSetChanged();
 
@@ -114,7 +114,7 @@ public class UpdateFaculty extends AppCompatActivity {
                     binding.meDepartment.setHasFixedSize(true);
                     binding.meDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
 
-                    TeacherAdapter adapter = new TeacherAdapter(list2, UpdateFaculty.this);
+                    TeacherAdapter adapter = new TeacherAdapter(list2, UpdateFaculty.this, "Mechanical Department");
                     binding.meDepartment.setAdapter(adapter);
 
                     for (DataSnapshot snap : snapshot.getChildren()) {
@@ -154,7 +154,7 @@ public class UpdateFaculty extends AppCompatActivity {
                     binding.elDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
 
 
-                    TeacherAdapter dapter = new TeacherAdapter(list3, UpdateFaculty.this);
+                    TeacherAdapter dapter = new TeacherAdapter(list3, UpdateFaculty.this, "Electrical Department");
                     binding.elDepartment.setAdapter(dapter);
 
                     for (DataSnapshot snap: snapshot.getChildren()){
@@ -193,7 +193,7 @@ public class UpdateFaculty extends AppCompatActivity {
                     binding.ceDepartment.setHasFixedSize(true);
                     binding.ceDepartment.setLayoutManager(new LinearLayoutManager(UpdateFaculty.this));
 
-                    TeacherAdapter adapter = new TeacherAdapter(list4, UpdateFaculty.this);
+                    TeacherAdapter adapter = new TeacherAdapter(list4, UpdateFaculty.this, "Civil Department");
                     binding.ceDepartment.setAdapter(adapter);
 
                     for (DataSnapshot snap: snapshot.getChildren()){

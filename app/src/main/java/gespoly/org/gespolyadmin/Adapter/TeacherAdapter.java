@@ -26,6 +26,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
 
     private List<TeacherDataModel> list;
     private Context context;
+    private String category;
 
     public List<TeacherDataModel> getList() {
         return list;
@@ -43,9 +44,10 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
         this.context = context;
     }
 
-    public TeacherAdapter(List<TeacherDataModel> list, Context context) {
+    public TeacherAdapter(List<TeacherDataModel> list, Context context, String category) {
         this.list = list;
         this.context = context;
+        this.category = category;
     }
 
 
@@ -78,6 +80,9 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
                 intent.putExtra("email",item.getEmail());
                 intent.putExtra("post",item.getPost());
                 intent.putExtra("image",item.getImage());
+                intent.putExtra("key",item.getKey());
+                intent.putExtra("category", category);
+
 
                 context.startActivity(intent);
 

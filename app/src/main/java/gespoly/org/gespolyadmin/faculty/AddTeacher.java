@@ -47,7 +47,7 @@ public class AddTeacher extends AppCompatActivity {
     StorageReference storageReference;
     private String name, email, post;
     private String downloadUrl = "";
-    Bitmap bitmap;
+    private Bitmap bitmap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +115,7 @@ public class AddTeacher extends AppCompatActivity {
             binding.teacherPost.requestFocus();
         }else if(category.equals("Select Category")){
             Toast.makeText(this, "Please provide teacher category", Toast.LENGTH_SHORT).show();
-        }else if(imageUri == null){
+        }else if(bitmap == null){
             Toast.makeText(this, "select Image", Toast.LENGTH_SHORT).show();
             insertData();
         }else{
