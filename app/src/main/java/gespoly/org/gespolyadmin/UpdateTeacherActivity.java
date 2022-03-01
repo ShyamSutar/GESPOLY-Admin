@@ -118,7 +118,7 @@ public class UpdateTeacherActivity extends AppCompatActivity {
             binding.updateTeacherEmail.setError("Empty");
             binding.updateTeacherEmail.requestFocus();
         }else if (bitmap == null){
-            updateData("");
+            updateData(image);
         }else{
             insertImage();
         }
