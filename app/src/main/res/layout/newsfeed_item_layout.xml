@@ -28,12 +28,12 @@
             android:textColor="@color/textColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-            app:layout_constraintEnd_toStartOf="@+id/materialButton"
+            app:layout_constraintEnd_toStartOf="@+id/deleteNotice1"
             app:layout_constraintStart_toEndOf="@+id/circleImageView"
             app:layout_constraintTop_toTopOf="@+id/circleImageView" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/materialButton"
+            android:id="@+id/deleteNotice1"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/deleteNoticeTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -55,13 +55,14 @@
             app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
 
         <ImageView
+            android:id="@+id/deleteNoticeImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+            app:layout_constraintTop_toBottomOf="@+id/deleteNoticeTitle" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
