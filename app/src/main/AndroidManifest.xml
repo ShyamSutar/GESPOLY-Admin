@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GESPOLYAdmin">
         <activity
+            android:name=".zoomed"
+            android:exported="false" />
+        <activity
             android:name=".DeleteNoticeActivity"
             android:exported="false" />
         <activity

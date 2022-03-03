@@ -1,6 +1,7 @@
 package gespoly.org.gespolyadmin.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,12 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import gespoly.org.gespolyadmin.MainActivity;
 import gespoly.org.gespolyadmin.Model.NoticeModel;
 import gespoly.org.gespolyadmin.R;
+import gespoly.org.gespolyadmin.UpdateTeacherActivity;
+import gespoly.org.gespolyadmin.UploadImage;
+import gespoly.org.gespolyadmin.zoomed;
 
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeViewAdapter> {
 
@@ -76,6 +81,17 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                 });
 
                 notifyItemRemoved(position);
+            }
+        });
+
+        holder.deleteNoticeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, zoomed.class);
+                intent.putExtra("i1",currentItem.getImage());
+                context.startActivity(intent);
+
             }
         });
 

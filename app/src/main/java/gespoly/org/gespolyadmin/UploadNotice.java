@@ -40,7 +40,7 @@ import gespoly.org.gespolyadmin.databinding.ActivityUploadNoticeBinding;
 public class UploadNotice extends AppCompatActivity {
 
     ActivityUploadNoticeBinding binding;
-//    Bitmap bitmap;
+    Bitmap bitmap;
     Uri imageUri;
     DatabaseReference reference;
     StorageReference storageReference;
@@ -132,29 +132,60 @@ public class UploadNotice extends AppCompatActivity {
 
         //to compress and upload
         //here to compressing image OK
-        final StorageReference ref;
-//        final String randomKey = UUID.randomUUID().toString();
-        ref = storageReference.child("Notice").child("images");
+//        final StorageReference ref;
+////        final String randomKey = UUID.randomUUID().toString();
+//        ref = storageReference.child("Notice").child("images");
+//
+//        ref.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                Toast.makeText(UploadNotice.this, "Cover photo saved", Toast.LENGTH_SHORT).show();
+//                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        downloadUrl = String.valueOf(uri);
+//                        uploadData();
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        pd.dismiss();
+//                        Toast.makeText(UploadNotice.this, "Error...", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,baos);
+        byte[] finalimg = baos.toByteArray();
 
-        ref.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+        final StorageReference filePath;
+        filePath = storageReference.child("Teachers").child(finalimg+"jpg");
+        final UploadTask uploadTask = filePath.putBytes(finalimg);
+        uploadTask.addOnCompleteListener(UploadNotice.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(UploadNotice.this, "Cover photo saved", Toast.LENGTH_SHORT).show();
-                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        downloadUrl = String.valueOf(uri);
-                        uploadData();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        pd.dismiss();
-                        Toast.makeText(UploadNotice.this, "Error...", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    downloadUrl = String.valueOf(uri);
+                                    uploadData();
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    pd.dismiss();
+                    Toast.makeText(UploadNotice.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
 
 
 
@@ -176,16 +207,16 @@ public class UploadNotice extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK && data!=null){
 
             imageUri = data.getData();
-
-            binding.noticeImageView.setImageURI(imageUri);
-
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
 //
-//            } catch (IOException e) {
-//                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
-//            }
-//            binding.noticeImageView.setImageBitmap(bitmap);
+//            binding.noticeImageView.setImageURI(imageUri);
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
+
+            } catch (IOException e) {
+                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+            }
+            binding.noticeImageView.setImageBitmap(bitmap);
 
         }else{
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
