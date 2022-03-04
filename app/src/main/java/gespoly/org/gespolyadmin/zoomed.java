@@ -49,7 +49,7 @@ public class zoomed extends AppCompatActivity {
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        photoview2 = findViewById(R.id.imageView2);
+        photoview2 = findViewById(R.id.imageView2); 
         Picasso.get().load(i1).into(photoview2);
 
         photoview2.setOnTouchListener(new View.OnTouchListener() {
