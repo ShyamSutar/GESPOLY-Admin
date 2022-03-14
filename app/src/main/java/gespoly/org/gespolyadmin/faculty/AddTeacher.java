@@ -41,10 +41,10 @@ public class AddTeacher extends AppCompatActivity {
 
     ActivityAddTeacherBinding binding;
     private String category;
-    Uri imageUri;
-    ProgressDialog pd;
-    DatabaseReference reference, db;
-    StorageReference storageReference;
+    private Uri imageUri;
+    private ProgressDialog pd;
+    private DatabaseReference reference, db;
+    private StorageReference storageReference;
     private String name, email, post;
     private String downloadUrl = "";
     private Bitmap bitmap = null;

@@ -83,7 +83,7 @@ public class UploadImage extends AppCompatActivity {
         binding.uploadImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(imageUri == null){
+                if(bitmap == null){
                     Toast.makeText(UploadImage.this, "Please Select the Image", Toast.LENGTH_SHORT).show();
                 }else if (category.equals("Select Category")){
                     Toast.makeText(UploadImage.this, "Please select image Category", Toast.LENGTH_SHORT).show();
@@ -102,11 +102,10 @@ public class UploadImage extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,50,baos);
         byte[] finalimg = baos.toByteArray();
-
-
         final StorageReference filePath;
-        filePath = storageReference.child("images");
+        filePath = storageReference.child(finalimg+"jpg");
         final UploadTask uploadTask = filePath.putBytes(finalimg);
+
         uploadTask.addOnCompleteListener(UploadImage.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -125,7 +124,7 @@ public class UploadImage extends AppCompatActivity {
                     });
                 }else{
                     pd.dismiss();
-                    Toast.makeText(UploadImage.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UploadImage.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -164,7 +163,8 @@ public class UploadImage extends AppCompatActivity {
 
             imageUri = data.getData();
 
-//            binding.galleryImageView.setImageURI(imageUri);
+//            Picasso.get().load(imageUri).into(binding.addTeacherImage);
+//            binding.addTeacherImage.setImageURI(imageUri);
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
