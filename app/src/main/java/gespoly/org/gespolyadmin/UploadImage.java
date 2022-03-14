@@ -6,21 +6,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
@@ -30,11 +36,12 @@ public class UploadImage extends AppCompatActivity {
 
     ActivityUploadImageBinding binding;
     private String category;
-    Uri imageUri;
-    ProgressDialog pd;
-    DatabaseReference reference;
-    StorageReference storageReference;
-    String downloadUrl;
+    private Uri imageUri;
+    private ProgressDialog pd;
+    private DatabaseReference reference;
+    private StorageReference storageReference;
+    private String downloadUrl;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,31 +99,40 @@ public class UploadImage extends AppCompatActivity {
 
     private void uploadImage() {
 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,baos);
+        byte[] finalimg = baos.toByteArray();
 
-        //to compress and upload
-        //here to compressing image OK
-        final StorageReference ref1;
-//        final String randomKey = UUID.randomUUID().toString();
-        ref1 = storageReference.child("images");
 
-        ref1.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        final StorageReference filePath;
+        filePath = storageReference.child("images");
+        final UploadTask uploadTask = filePath.putBytes(finalimg);
+        uploadTask.addOnCompleteListener(UploadImage.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(UploadImage.this, "Cover photo saved", Toast.LENGTH_SHORT).show();
-                ref1.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        downloadUrl = String.valueOf(uri);
-                        uploadData();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        pd.dismiss();
-                        Toast.makeText(UploadImage.this, "Error...", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    downloadUrl = String.valueOf(uri);
+                                    uploadData();
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    pd.dismiss();
+                    Toast.makeText(UploadImage.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
             }
+        });
+
+
+
+    }
 
             private void uploadData() {
                 reference = reference.child(category);
@@ -135,8 +151,7 @@ public class UploadImage extends AppCompatActivity {
                         pd.dismiss();
                         Toast.makeText(UploadImage.this, "Something Went wrong", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
+
         });
 
 
@@ -149,15 +164,15 @@ public class UploadImage extends AppCompatActivity {
 
             imageUri = data.getData();
 
-            binding.galleryImageView.setImageURI(imageUri);
+//            binding.galleryImageView.setImageURI(imageUri);
 
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
-//
-//            } catch (IOException e) {
-//                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
-//            }
-//            binding.noticeImageView.setImageBitmap(bitmap);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
+
+            } catch (IOException e) {
+                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+            }
+            binding.galleryImageView.setImageBitmap(bitmap);
 
         }else{
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
